@@ -1,18 +1,22 @@
 import React, { Component } from 'react'
 import { Layout, Menu, Breadcrumb } from 'antd';
+import { withRouter } from 'react-router-dom';
 import * as Icon from '@ant-design/icons';
 import {adminRouter} from '../../routes'
+import './frame.css'
 
 const { SubMenu } = Menu;
 const { Header, Content, Sider } = Layout;
 
 // 动态生成icon节点
 const iconElement = (name)=>{
-  console.log(React.createElement(name,{style: { fontSize: '16px'}}))
   React.createElement(name,{style: { fontSize: '16px'}})
 }
 
-export default class Frame extends Component {
+class Frame extends Component {
+    handleClick(pathname){
+      this.props.history.push(pathname)
+    }
     render() {
         return (
             <Layout>
@@ -35,7 +39,7 @@ export default class Frame extends Component {
                     this.props.menus.map((item, index) => {
                       if(item.isNav){
                         return (
-                          <Menu.Item key={index} icon={item.icon ? iconElement(item.icon):''}>
+                          <Menu.Item key={index} icon={item.icon ? iconElement(item.icon):''} onClick={this.handleClick.bind(this, item.pathname)}>
                             { item.icon && iconElement(item.icon)}
                             {item.title}
                           </Menu.Item>
@@ -46,17 +50,11 @@ export default class Frame extends Component {
                 </Menu>
               </Sider>
               <Layout style={{ padding: '0 24px 24px' }}>
-                <Breadcrumb style={{ margin: '16px 0' }}>
-                  <Breadcrumb.Item>Home</Breadcrumb.Item>
-                  <Breadcrumb.Item>List</Breadcrumb.Item>
-                  <Breadcrumb.Item>App</Breadcrumb.Item>
-                </Breadcrumb>
                 <Content
                   className="site-layout-background"
                   style={{
                     padding: 24,
                     margin: 0,
-                    minHeight: 280,
                   }}
                 >
                   { this.props.children }
@@ -67,3 +65,5 @@ export default class Frame extends Component {
         )
     }
 }
+
+export default withRouter(Frame)
